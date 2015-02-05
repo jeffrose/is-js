@@ -81,7 +81,6 @@ describe( 'is', function(){
 		it( 'should accept booleans', function(){
 			expect( is.boolean( true ) ).to.be.true;
 			expect( is.boolean( false ) ).to.be.true;
-			expect( is.boolean( new Boolean( true ) ) ).to.be.true;
 		} );
 		
 		it( 'should reject non-booleans', function(){
@@ -158,30 +157,29 @@ describe( 'is', function(){
 		} );
 	} );
 	
-	describe( '.finite', function(){
+	describe( '.number.finite', function(){
 		it( 'should be a function', function(){
-			expect( typeof is.finite ).to.equal( 'function' );
+			expect( typeof is.number.finite ).to.equal( 'function' );
 		} );
 		
 		it( 'should accept finite values', function(){
-			expect( is.finite( -10	) ).to.be.true;
-			expect( is.finite( +10	) ).to.be.true;
-			expect( is.finite( 10	) ).to.be.true;
-			expect( is.finite( 2.5	) ).to.be.true;
-			expect( is.finite( 0xff	) ).to.be.true;
-			expect( is.finite( 0144	) ).to.be.true;
+			expect( is.number.finite( -10	) ).to.be.true;
+			expect( is.number.finite( +10	) ).to.be.true;
+			expect( is.number.finite( 10	) ).to.be.true;
+			expect( is.number.finite( 2.5	) ).to.be.true;
+			expect( is.number.finite( 0xff	) ).to.be.true;
+			expect( is.number.finite( 0144	) ).to.be.true;
 		} );
 		
 		it( 'should reject non-finite values', function(){
-			expect( is.finite( Infinity		) ).to.be.false;
-			expect( is.finite( [ 10 ]		) ).to.be.false;
-			expect( is.finite( { id: 5 }	) ).to.be.false;
-			expect( is.finite( undefined	) ).to.be.false;
-			expect( is.finite( null			) ).to.be.false;
-			expect( is.finite( "10"			) ).to.be.false;
-			expect( is.finite( 'true'		) ).to.be.false;
-			expect( is.finite( NaN			) ).to.be.false;
-			expect( is.finite( new Number( 100 ) ) ).to.be.false;
+			expect( is.number.finite( Infinity		) ).to.be.false;
+			expect( is.number.finite( [ 10 ]		) ).to.be.false;
+			expect( is.number.finite( { id: 5 }	) ).to.be.false;
+			expect( is.number.finite( undefined	) ).to.be.false;
+			expect( is.number.finite( null			) ).to.be.false;
+			expect( is.number.finite( "10"			) ).to.be.false;
+			expect( is.number.finite( 'true'		) ).to.be.false;
+			expect( is.number.finite( NaN			) ).to.be.false;
 		} );
 	} );
 	
@@ -191,29 +189,28 @@ describe( 'is', function(){
 		} );
 	} );
 	
-	describe( '.integer', function(){
+	describe( '.number.integer', function(){
 		it( 'should be a function', function(){
-			expect( typeof is.integer ).to.equal( 'function' );
+			expect( typeof is.number.integer ).to.equal( 'function' );
 		} );
 		
 		it( 'should accept integers', function(){
-			expect( is.integer( -10				) ).to.be.true;
-			expect( is.integer( +10				) ).to.be.true;
-			expect( is.integer( 10				) ).to.be.true;
-			expect( is.integer( 0xff			) ).to.be.true;
-			expect( is.integer( 0144			) ).to.be.true;
-			expect( is.integer( new Number( 100	) ) ).to.be.true;
+			expect( is.number.integer( -10				) ).to.be.true;
+			expect( is.number.integer( +10				) ).to.be.true;
+			expect( is.number.integer( 10				) ).to.be.true;
+			expect( is.number.integer( 0xff			) ).to.be.true;
+			expect( is.number.integer( 0144			) ).to.be.true;
 		} );
 		
 		it( 'should reject non-integers', function(){
-			expect( is.integer( 2.5			) ).to.be.false;
-			expect( is.integer( []			) ).to.be.false;
-			expect( is.integer( {}			) ).to.be.false;
-			expect( is.integer( undefined	) ).to.be.false;
-			expect( is.integer( null		) ).to.be.false;
-			expect( is.integer( "10"		) ).to.be.false;
-			expect( is.integer( true		) ).to.be.false;
-			expect( is.integer( NaN			) ).to.be.false;
+			expect( is.number.integer( 2.5			) ).to.be.false;
+			expect( is.number.integer( []			) ).to.be.false;
+			expect( is.number.integer( {}			) ).to.be.false;
+			expect( is.number.integer( undefined	) ).to.be.false;
+			expect( is.number.integer( null		) ).to.be.false;
+			expect( is.number.integer( "10"		) ).to.be.false;
+			expect( is.number.integer( true		) ).to.be.false;
+			expect( is.number.integer( NaN			) ).to.be.false;
 		} );
 	} );
 	
@@ -248,7 +245,6 @@ describe( 'is', function(){
 			expect( is.number( 2.5				) ).to.be.true;
 			expect( is.number( 0xff				) ).to.be.true;
 			expect( is.number( 0144				) ).to.be.true;
-			expect( is.number( new Number( 100	) ) ).to.be.true;
 		} );
 		
 		it( 'should reject non-numbers', function(){
@@ -316,27 +312,27 @@ describe( 'is', function(){
 		} );
 	} );
 	
-	describe( '.plainObject', function(){
+	describe( '.object.plain', function(){
 		it( 'should be a function', function(){
-			expect( typeof is.plainObject ).to.equal( 'function' );
+			expect( typeof is.object.plain ).to.equal( 'function' );
 		} );
 		
 		it( 'should accept plain object values', function(){
-			expect( is.plainObject( {} ) ).to.be.true;
-			expect( is.plainObject( { id: 5 } ) ).to.be.true;
+			expect( is.object.plain( {} ) ).to.be.true;
+			expect( is.object.plain( { id: 5 } ) ).to.be.true;
 		} );
 		
 		it( 'should reject non-plain object values', function(){
-			expect( is.plainObject( [] ) ).to.be.false;
-			expect( is.plainObject( new Boolean( true ) ) ).to.be.false;
-			expect( is.plainObject( new Number( 10 ) ) ).to.be.false;
-			expect( is.plainObject( new String( 'hello' ) ) ).to.be.false;
-			expect( is.plainObject( new Date() ) ).to.be.false;
-			expect( is.plainObject( null		) ).to.be.false;
-			expect( is.plainObject( undefined	) ).to.be.false;
-			expect( is.plainObject( false		) ).to.be.false;
-			expect( is.plainObject( 10			) ).to.be.false;
-			expect( is.plainObject( 'hello'		) ).to.be.false;
+			expect( is.object.plain( [] ) ).to.be.false;
+			expect( is.object.plain( new Boolean( true ) ) ).to.be.false;
+			expect( is.object.plain( new Number( 10 ) ) ).to.be.false;
+			expect( is.object.plain( new String( 'hello' ) ) ).to.be.false;
+			expect( is.object.plain( new Date() ) ).to.be.false;
+			expect( is.object.plain( null		) ).to.be.false;
+			expect( is.object.plain( undefined	) ).to.be.false;
+			expect( is.object.plain( false		) ).to.be.false;
+			expect( is.object.plain( 10			) ).to.be.false;
+			expect( is.object.plain( 'hello'		) ).to.be.false;
 		} );
 	} );
 	
@@ -415,7 +411,6 @@ describe( 'is', function(){
 		it( 'should accept string values', function(){
 			expect( is.string( 'hello' ) ).to.be.true;
 			expect( is.string( "goodbye" ) ).to.be.true;
-			expect( is.string( new String( 'hi' ) ) ).to.be.true;
 		} );
 		
 		it( 'should reject non-string values', function(){

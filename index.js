@@ -1,65 +1,68 @@
 ( function( root, factory ){
-    // AMD
-    if( typeof define === 'function' && define.amd ){
-        define( factory );
-    
-    // Node.js
-    } else if( typeof exports === 'object' ){
-        module.exports = factory();
-    
-    // Browser global
-    } else {
-        root.is = factory();
-    }
-}( this, function( UNDEFINED ){
-    var hasOwnProperty		= Object.prototype.hasOwnProperty,
-        toString			= Object.prototype.toString,
-        
-        KIND_REGEX			= /^\[object (.*)\]$/,
-        MARKUP_REGEX		= /<\/?\w+((\s+\w+(\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)\/?>/,
-        MAX_ARRAY_LENGTH	= Math.pow( 2, 53 ) - 1,
-        NON_HOST_KINDS = {
-			'Boolean'	: true,
-			'Number'	: true,
-			'String'	: true,
-			'Undefined'	: true
+	var features = {
+			'arraybuffer'				: 'ArrayBuffer'			in root,
+			'array-isarray'				: 'isArray'				in Array,
+			'dataview'					: 'DataView'			in root,
+			'float32array'				: 'Float32Array'		in root,
+			'float64array'				: 'Float64Array'		in root,
+			'int8array'					: 'Int8Array'			in root,
+			'int16array'				: 'Int16Array'			in root,
+			'int32array'				: 'Int32Array'			in root,
+			'map'						: 'Map'					in root,
+			'node'						: 'Node'				in root,
+			'number-isfinite'			: 'isFinite'			in Number,
+			'number-isinteger'			: 'isInteger'			in Number,
+			'number-isnan'				: 'isNaN'				in Number,
+			'number-max_safe_integer'	: 'MAX_SAFE_INTEGER'	in Number,
+			'promise'					: 'Promise'				in root,
+			'set'						: 'Set'					in root,
+			'uint8array'				: 'Uint8Array'			in root,
+			'uint8clampedarray'			: 'Uint8ClampedArray'	in root,
+			'uint16array'				: 'Uint16Array'			in root,
+			'uint32array'				: 'Uint32Array'			in root,
+			'weakmap'					: 'WeakMap'				in root,
+			'weakset'					: 'WeakSet'				in root
 		},
 		
-		// Reference to the global context (works on ES3 and ES5-strict mode)
-		// jshint -W061, -W064
-		root = Function( 'return this' )(),
-		
-		features = {
-			'arraybuffer'		: 'ArrayBuffer'			in root,
-			'array-isarray'		: 'isArray'				in Array,
-			'dataview'			: 'DataView'			in root,
-			'float32array'		: 'Float32Array'		in root,
-			'float64array'		: 'Float64Array'		in root,
-			'int8array'			: 'Int8Array'			in root,
-			'int16array'		: 'Int16Array'			in root,
-			'int32array'		: 'Int32Array'			in root,
-			'map'				: 'Map'					in root,
-			'node'				: 'Node'				in root,
-			'number-isfinite'	: 'isFinite'			in Number,
-			'number-isnan'		: 'isNaN'				in Number,
-			'promise'			: 'Promise'				in root,
-			'set'				: 'Set'					in root,
-			'uint8array'		: 'Uint8Array'			in root,
-			'uint8clampedarray'	: 'Uint8ClampedArray'	in root,
-			'uint16array'		: 'Uint16Array'			in root,
-			'uint32array'		: 'Uint32Array'			in root,
-			'weakmap'			: 'WeakMap'				in root,
-			'weakset'			: 'WeakSet'				in root
-		},
-        
-        /**
+		/**
          * @function
          * @param {String} id
          * @returns {Boolean} Whether or not the feature represented by the id exists.
          */
         has = function( id ){
         	return features[ id ];	
-        },
+        };
+	
+    // AMD
+    if( typeof define === 'function' && define.amd ){
+        define( function(){
+        	return factory( has );
+        } );
+    
+    // Node.js
+    } else if( typeof exports === 'object' ){
+        module.exports = factory( has );
+    
+    // Browser global
+    } else {
+        root.is = factory( has );
+    }
+}( this, function( has, UNDEFINED ){
+    var hasOwnProperty		= Object.prototype.hasOwnProperty,
+        toString			= Object.prototype.toString,
+        
+        KIND_REGEX			= /^\[object (.*)\]$/,
+        MARKUP_REGEX		= /<\/?\w+((\s+\w+(\s*=\s*(?:".*?"|'.*?'|[^'">\s]+))?)+\s*|\s*)\/?>/,
+        MAX_ARRAY_LENGTH	= has( 'number-max_safe_integer' ) ?
+        	Number.MAX_SAFE_INTEGER :
+        	Math.pow( 2, 53 ) - 1,
+        NON_HOST_KINDS = {
+			'Boolean'	: true,
+			'Number'	: true,
+			'String'	: true,
+			'Undefined'	: true
+		},
+		WEEKDAY_REGEX		= /^[1-5]$/,
         
         /**
          * @function
@@ -127,7 +130,7 @@
 	};
 	
 	is.boolean = function isBoolean( value ){
-		return isPrimitiveBoolean( value ) || value instanceof Boolean;
+		return isPrimitiveBoolean( value );
 	};
 	
 	is.dataView = function isDataView( value ){
@@ -138,6 +141,45 @@
 	
 	is.date = function isDate( value ){
 		return value instanceof Date || is( value, 'Date' );	
+	};
+	
+	is.date.future = function isFuture( value ){
+		var now = new Date();
+		return is.date( value ) && now.getTime() < value.getTime();
+	};
+	
+	is.date.past = function isPast( value ){
+		var now = new Date();
+		return is.date( value ) && now.getTime() > value.getTime();
+	};
+	
+	is.date.today = function isToday( value ){
+		var now = new Date(),
+			today = now.toDateString();
+			
+		return is.date( value ) && today === value.toDateString();
+	};
+	
+	is.date.tomorrow = function isTomorrow( value ){
+		var now = new Date(),
+			tomorrow = ( new Date( now.setDate( now.getDate() + 1 ) ) ).toDateString();
+			
+		return is.date( value ) && tomorrow === value.toDateString();
+	};
+	
+	is.date.weekday = function isWeekday( value ){
+		return is.date( value ) && WEEKDAY_REGEX.test( value.getDay() );	
+	};
+	
+	is.date.weekend = function isWeekend( value ){
+		return !is.date.weekday( value );
+	};
+	
+	is.date.yesterday = function isYesterday( value ){
+		var now = new Date(),
+			yesterday = ( new Date( now.setDate( now.getDate() - 1 ) ) ).toDateString();
+			
+		return is.date( value ) && yesterday === value.toDateString();
 	};
 	
 	is.empty = function isEmpty( value ){
@@ -164,13 +206,7 @@
 	};
 	
 	is.error = function isError( value ){
-		return value instanceof Error || is( value, 'Error' );	
-	};
-	
-	is.finite = function isFinite( value ){
-		return has( 'number-isfinite' ) ?
-			Number.isFinite( value ) :
-			isPrimitiveNumber( value ) && isFinite( value );
+		return value instanceof Error || is( value, 'Error' );
 	};
 	
 	is.float32Array = function isFloat32Array( value ){
@@ -214,18 +250,10 @@
 			is( value, 'Int32Array' );
 	};
 	
-	is.integer = function isInteger( value ){
-		return is.number( value ) && parseFloat( value ) % 1 === 0;
-	};
-	
 	is.map = function isMap( value ){
 		return has( 'map' ) ?
 			value instanceof Map :
 			is( value, 'Map' );	
-	};
-	
-	is.markup = function isMarkup( value ){
-		return is.string( value ) && MARKUP_REGEX.test( value );
 	};
 	
 	is.nan = function isNaN( value ){
@@ -245,7 +273,39 @@
 	};
 	
 	is.number = function isNumber( value ){
-		return ( isPrimitiveNumber( value ) || value instanceof Number ) && !is.nan( value );
+		return isPrimitiveNumber( value ) && !is.nan( value );
+	};
+	
+	is.number.even = function isEven( value ){
+		return is.number( value ) && value % 2 === 0;
+	};
+	
+	is.number.finite = function isFinite( value ){
+		return has( 'number-isfinite' ) ?
+			Number.isFinite( value ) :
+			is.number( value ) && isFinite( value );
+	};
+	
+	is.number.float = function isFloat( value ){
+		return is.number( value ) && value % 1 !== 0;
+	};
+	
+	is.number.integer = function isInteger( value ){
+		return has( 'number-isinteger' ) ?
+			Number.isInteger( value ) :
+			is.number.finite( value ) && Math.floor( value ) === value;
+	};
+	
+	is.number.negative = function isNegative( value ){
+		return is.number( value ) && value < 0;
+	};
+	
+	is.number.odd = function isOdd( value ){
+		return is.number( value ) && value % 2 !== 0;
+	};
+	
+	is.number.positive = function isPositive( value ){
+		return is.number( value ) && value > 0;
 	};
 	
 	is.numeric = function isNumeric( value ){
@@ -256,7 +316,7 @@
 		return typeof value === 'object' && !is.null( value );
 	};
 	
-	is.plainObject = function isPlainObject( value ){
+	is.object.plain = function isPlain( value ){
 		return is.object( value ) && value.constructor === Object;
 	};
 	
@@ -278,6 +338,10 @@
 		return value instanceof RegExp || is.object( value ) && is[ 'function' ]( value.test ) && is[ 'function' ]( value.exec ) && is.boolean( value.ignoreCase ) || is( value, 'RegExp' );
 	};
 	
+	is.same = function isSame( value1, value2 ){
+		return is( value1 ) === is( value2 );	
+	};
+	
 	is.set = function isSet( value ){
 		return has( 'set' ) ?
 			value instanceof Set :
@@ -285,7 +349,19 @@
 	};
 	
 	is.string = function isString( value ){
-		return isPrimitiveString( value ) || value instanceof String;
+		return isPrimitiveString( value );
+	};
+	
+	is.string.lowerCase = function isLowerCase( value ){
+		return is.string( value ) && value === value.toLowerCase();	
+	};
+	
+	is.string.markup = function isMarkup( value ){
+		return is.string( value ) && MARKUP_REGEX.test( value );
+	};
+	
+	is.string.upperCase = function isUpperCase( value ){
+		return is.string( value ) && value === value.toUpperCase();
 	};
 	
 	is.thenable = function isThenable( value ){
