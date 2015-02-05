@@ -1,0 +1,28 @@
+{
+	"name": "is-js",
+	"description": ".",
+	"version": "0.1.0",
+	"repository": "https://github.com/jeffrose/is-js.git",
+	"homepage": "https://github.com/jeffrose/is-js",
+	"bugs": "https://github.com/jeffrose/is-js/issues",
+	"author": "Jeff Rose",
+	"license": "Apache-2.0",
+	"keywords": [
+	    
+	],
+	"main": "index.js",
+	"dependencies": {
+	    
+	},
+	"devDependencies": {
+		"chai": "1.10.0",
+		"gulp": "3.8.10",
+		"gulp-istanbul": "0.5.0",
+		"gulp-mocha": "2.0.0",
+		"gulp-util": "3.0.1",
+		"mocha": "2.1.0"
+	},
+	"engines": {
+		"node": ">= 0.9"
+	}
+}
