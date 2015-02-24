@@ -57,10 +57,10 @@
         root.is = factory( has );
     }
 }( this, function( has, UNDEFINED ){
-    var hasOwnProperty		= Object.prototype.hasOwnProperty,
-        toString			= Object.prototype.toString,
+    var hasOwnProperty   = Object.prototype.hasOwnProperty,
+        toString         = Object.prototype.toString,
         
-        KIND_REGEX			= /^\[object (.*)\]$/,
+        KIND_REGEX       = /^\[object (.*)\]$/,
         
         MAX_SAFE_INTEGER = has( 'number-max_safe_integer' ) ?
             Number.MAX_SAFE_INTEGER :
@@ -69,11 +69,11 @@
             Number.MIN_SAFE_INTEGER :
             -( MAX_SAFE_INTEGER ),
             
-        NON_HOST_KINDS = {
-            'Boolean'	: true,
-            'Number'	: true,
-            'String'	: true,
-            'Undefined'	: true
+        NON_HOST_KINDS   = {
+            'Boolean'    : true,
+            'Number'     : true,
+            'String'     : true,
+            'Undefined'  : true
         },
         
         /**
