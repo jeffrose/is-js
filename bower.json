@@ -1,0 +1,22 @@
+{
+  "name": "is-js",
+  "main": "index.js",
+  "version": "0.2.0",
+  "homepage": "https://github.com/jeffrose/is-js",
+  "authors": [
+    "Jeff Rose <jefuri.rozu@gmail.com>"
+  ],
+  "description": "A simple checking utility",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "license": "Apache-2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ]
+}
