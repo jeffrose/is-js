@@ -8,11 +8,6 @@
             'documentfragment'          : 'DocumentFragment'    in root,
             'dataview'                  : 'DataView'            in root,
             'element'                   : 'Element'             in root,
-            'float32array'              : 'Float32Array'        in root,
-            'float64array'              : 'Float64Array'        in root,
-            'int8array'                 : 'Int8Array'           in root,
-            'int16array'                : 'Int16Array'          in root,
-            'int32array'                : 'Int32Array'          in root,
             'map'                       : 'Map'                 in root,
             'node'                      : 'Node'                in root,
             'number-isfinite'           : 'isFinite'            in Number,
@@ -25,10 +20,6 @@
             'set'                       : 'Set'                 in root,
             'symbol'                    : 'Symbol'              in root,
             'text'                      : 'Text'                in root,
-            'uint8array'                : 'Uint8Array'          in root,
-            'uint8clampedarray'         : 'Uint8ClampedArray'   in root,
-            'uint16array'               : 'Uint16Array'         in root,
-            'uint32array'               : 'Uint32Array'         in root,
             'weakmap'                   : 'WeakMap'             in root,
             'weakset'                   : 'WeakSet'             in root
         },
@@ -109,10 +100,12 @@
                 result;
         },
         
+        // Duck typing for non-Weak ES6 collections
         isIterableCollection = function( value ){
             return is.iterable( value ) && is[ 'function' ]( value.clear ) && is[ 'function' ]( value.entries ) && is[ 'function' ]( value.forEach ) && is[ 'function' ]( value.keys ) && is[ 'function' ]( value.values ) && isSafeSize( value.size );
         },
         
+        // Duck typing ES6 Map
         isMapAPI = function( value ){
             return isWeakMapAPI( value ) && isIterableCollection( value );
         },
@@ -129,18 +122,22 @@
             return typeof value === 'string';	
         },
         
+        // Validity check for .length and .size properties
         isSafeSize = function( size ){
             return is.number( size ) && size >= 0 && is.number.safe( size );
         },
         
+        // Duck typing ES6 Set
         isSetAPI = function( value ){
             return isWeakSetAPI( value ) && isIterableCollection( value );
         },
         
+        // Duck typing ES6 WeakMap
         isWeakMapAPI = function( value ){
             return is.object( value ) && is[ 'function' ]( value[ 'delete' ] ) && is[ 'function' ]( value.get ) && is[ 'function' ]( value.has ) && is[ 'function' ]( value.set );	
         },
         
+        // Ducktyping ES6 WeakSet
         isWeakSetAPI = function( value ){
             return is.object( value ) && is[ 'function' ]( value.add ) && is[ 'function' ]( value[ 'delete' ] ) && is[ 'function' ]( value.has );	
         };
@@ -171,7 +168,9 @@
      * @returns {Boolean} Whether or not value is an ArrayBuffer.
      */ 
     is.arrayBuffer = function isArrayBuffer( value ){
-        return has( 'arraybuffer' ) && value instanceof ArrayBuffer || is.object( value ) && isSafeSize( value.byteLength ) && is[ 'function' ]( value.slice );
+        return has( 'arraybuffer' ) ?
+            value instanceof ArrayBuffer :
+            is.object( value ) && isSafeSize( value.byteLength ) && is[ 'function' ]( value.slice );
     };
     
     /**
@@ -259,17 +258,6 @@
      */ 
     is.error = function isError( value ){
         return value instanceof Error || is( value, 'Error' );
-    };
-    
-    /**
-     * @function
-     * @param {*} value
-     * @returns {Boolean} Whether or not value is finite.
-     */ 
-    is.finite = function isFinite( value ){
-        return has( 'number-isfinite' ) ?
-            Number.isFinite( value ) :
-            isPrimitiveNumber( value ) && isFinite( value );
     };
     
     /**
@@ -394,7 +382,19 @@
      */ 
     is.number = function isNumber( value ){
         // Exclude Infinity and NaN from being numbers.
-        return is.finite( value );
+        return has( 'number-isfinite' ) ?
+            Number.isFinite( value ) :
+            isPrimitiveNumber( value ) && isFinite( value );
+    };
+    
+    /**
+     * @function
+     * @param {*} value
+     * @returns {Boolean} Whether or not value is finite.
+     */ 
+    is.number.finite = function isFinite( value ){
+        // Since is.number() excludes Infinity and NaN, this is just an alias.
+        return is.number( value );
     };
     
     /**
@@ -525,87 +525,6 @@
      */ 
     is.typedArray = function isTypedArray( value ){
         return is.arrayLike( value ) && is.number( value.constructor.BYTES_PER_ELEMENT );
-    };
-    
-    /**
-     * @function
-     * @param {*} value
-     * @returns {Boolean} Whether or not value is a Float32Array.
-     */ 
-    is.typedArray.float32 = function isFloat32Array( value ){
-        return is.typedArray( value ) && ( has( 'float32array' ) && value instanceof Float32Array || value.constructor.name === 'Float32Array' );
-    };
-    
-    /**
-     * @function
-     * @param {*} value
-     * @returns {Boolean} Whether or not value is a Float64Array.
-     */ 
-    is.typedArray.float64 = function isFloat64Array( value ){
-        return is.typedArray( value ) && ( has( 'float64array' ) && value instanceof Float64Array || value.constructor.name === 'Float64Array' );
-    };
-    
-    /**
-     * @function
-     * @param {*} value
-     * @returns {Boolean} Whether or not value is an Int8Array.
-     */ 
-    is.typedArray.int8 = function isInt8Array( value ){
-        return is.typedArray( value ) && ( has( 'int8array' ) && value instanceof Int8Array || value.constructor.name === 'Int8Array' );
-    };
-    
-    /**
-     * @function
-     * @param {*} value
-     * @returns {Boolean} Whether or not value is an Int16Array.
-     */ 
-    is.typedArray.int16 = function isInt16Array( value ){
-        return is.typedArray( value ) && ( has( 'int16array' ) && value instanceof Int16Array || value.constructor.name === 'Int16Array' );
-    };
-    
-    /**
-     * @function
-     * @param {*} value
-     * @returns {Boolean} Whether or not value is an Int32Array.
-     */ 
-    is.typedArray.int32 = function isInt32Array( value ){
-        return is.typedArray( value ) && ( has( 'int32array' ) && value instanceof Int32Array || value.constructor.name === 'Int32Array' );
-    };
-    
-    /**
-     * @function
-     * @param {*} value
-     * @returns {Boolean} Whether or not value is an Uint8Array.
-     */ 
-    is.typedArray.uint8 = function isUint8Array( value ){
-        return is.typedArray( value ) && ( has( 'uint8array' ) && value instanceof Uint8Array || value.constructor.name === 'Uint8Array' );
-    };
-    
-    /**
-     * @function
-     * @param {*} value
-     * @returns {Boolean} Whether or not value is an Uint8ClampedArray.
-     */ 
-    is.typedArray.uint8Clamped = function isUint8ClampedArray( value ){
-        return is.typedArray( value ) && ( has( 'uint8clampedarray' ) && value instanceof Uint8ClampedArray || value.constructor.name === 'Uint8ClampedArray' );
-    };
-    
-    /**
-     * @function
-     * @param {*} value
-     * @returns {Boolean} Whether or not value is an Uint16Array.
-     */ 
-    is.typedArray.uint16 = function isUint16Array( value ){
-        return is.typedArray( value ) && ( has( 'uint16array' ) && value instanceof Uint16Array || value.constructor.name === 'Uint16Array' );
-    };
-    
-    /**
-     * @function
-     * @param {*} value
-     * @returns {Boolean} Whether or not value is an Uint32Array.
-     */ 
-    is.typedArray.uint32 = function isUint32Array( value ){
-        return is.typedArray( value ) && ( has( 'uint32array' ) && value instanceof Uint32Array || value.constructor.name === 'Uint32Array' );
     };
     
     /**

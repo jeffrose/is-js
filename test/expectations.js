@@ -74,21 +74,6 @@ module.exports = {
             'ERROR'    
         ]  
     },
-    'finite': {
-        pass: [
-            'NUMBER_ZERO',
-            'NUMBER_POSITIVE',
-            'NUMBER_NEGATIVE',
-            'NUMBER_FLOAT_POSITIVE',
-            'NUMBER_FLOAT_NEGATIVE',
-            'NUMBER_EXPONENTIAL_POSITIVE',
-            'NUMBER_EXPONENTIAL_NEGATIVE',
-            'NUMBER_OCTAL_POSITIVE',
-            'NUMBER_OCTAL_NEGATIVE',
-            'NUMBER_HEX_POSITIVE',
-            'NUMBER_HEX_NEGATIVE'
-        ]
-    },
     'function': {
         pass: [
             'FUNCTION',
@@ -136,6 +121,22 @@ module.exports = {
             'NUMBER_HEX_POSITIVE',
             'NUMBER_HEX_NEGATIVE'
         ],
+        
+        'finite': {
+            pass: [
+                'NUMBER_ZERO',
+                'NUMBER_POSITIVE',
+                'NUMBER_NEGATIVE',
+                'NUMBER_FLOAT_POSITIVE',
+                'NUMBER_FLOAT_NEGATIVE',
+                'NUMBER_EXPONENTIAL_POSITIVE',
+                'NUMBER_EXPONENTIAL_NEGATIVE',
+                'NUMBER_OCTAL_POSITIVE',
+                'NUMBER_OCTAL_NEGATIVE',
+                'NUMBER_HEX_POSITIVE',
+                'NUMBER_HEX_NEGATIVE'
+            ]
+        },
         
         'integer': {
             pass: [
@@ -318,53 +319,7 @@ module.exports = {
             'UINT8_CLAMPED_ARRAY_EMPTY',
             'UINT16_ARRAY_EMPTY',
             'UINT32_ARRAY_EMPTY'
-        ],
-        
-        'float32': {
-            pass: [
-                'FLOAT32_ARRAY_EMPTY'    
-            ]  
-        },
-        'float64': {
-            pass: [
-                'FLOAT64_ARRAY_EMPTY'    
-            ]  
-        },
-        'int8': {
-            pass: [
-                'INT8_ARRAY_EMPTY'    
-            ]
-        },
-        'int16': {
-            pass: [
-                'INT16_ARRAY_EMPTY'    
-            ]
-        },
-        'int32': {
-            pass: [
-                'INT32_ARRAY_EMPTY'    
-            ]
-        },
-        'uint8': {
-            pass: [
-                'UINT8_ARRAY_EMPTY'    
-            ]
-        },
-        'uint8Clamped': {
-            pass: [
-                'UINT8_CLAMPED_ARRAY_EMPTY'    
-            ]
-        },
-        'uint16': {
-            pass: [
-                'UINT16_ARRAY_EMPTY'    
-            ]
-        },
-        'uint32': {
-            pass: [
-                'UINT32_ARRAY_EMPTY'    
-            ]
-        },
+        ]
     },
     'undefined': {
         pass: [

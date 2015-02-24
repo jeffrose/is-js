@@ -104,18 +104,6 @@ describe( 'is', function(){
         } );
     } );
     
-    describe( '.finite', function(){
-        it( 'should be a function', function(){
-            expect( is.finite ).to.be.a( 'function' );
-        } );
-        
-        it( 'should meet expectations', function(){
-            Object.keys( CONSTANTS ).forEach( function( key ){
-                expect( is.finite( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.finite.pass.indexOf( key ) !== -1 ];
-            } );
-        } );
-    } );
-    
     describe( '.function', function(){
         it( 'should be a function', function(){
             expect( is.function ).to.be.a( 'function' );
@@ -166,6 +154,18 @@ describe( 'is', function(){
         it( 'should meet expectations', function(){
             Object.keys( CONSTANTS ).forEach( function( key ){
                 expect( is.number( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.number.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.number.finite', function(){
+        it( 'should be a function', function(){
+            expect( is.number.finite ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.number.finite( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.number.finite.pass.indexOf( key ) !== -1 ];
             } );
         } );
     } );
@@ -286,115 +286,6 @@ describe( 'is', function(){
         it( 'should meet expectations', function(){
             Object.keys( CONSTANTS ).forEach( function( key ){
                 expect( is.typedArray( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.pass.indexOf( key ) !== -1 ];
-            } );
-        } );
-    } );
-    
-    
-    describe( '.typedArray.float32', function(){
-        it( 'should be a function', function(){
-            expect( is.typedArray.float32 ).to.be.a( 'function' );
-        } );
-        
-        it( 'should meet expectations', function(){
-            Object.keys( CONSTANTS ).forEach( function( key ){
-                expect( is.typedArray.float32( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.float32.pass.indexOf( key ) !== -1 ];
-            } );
-        } );
-    } );
-    
-    describe( '.typedArray.float64', function(){
-        it( 'should be a function', function(){
-            expect( is.typedArray.float64 ).to.be.a( 'function' );
-        } );
-        
-        it( 'should meet expectations', function(){
-            Object.keys( CONSTANTS ).forEach( function( key ){
-                expect( is.typedArray.float64( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.float64.pass.indexOf( key ) !== -1 ];
-            } );
-        } );
-    } );
-    
-    describe( '.typedArray.int8', function(){
-        it( 'should be a function', function(){
-            expect( is.typedArray.int8 ).to.be.a( 'function' );
-        } );
-        
-        it( 'should meet expectations', function(){
-            Object.keys( CONSTANTS ).forEach( function( key ){
-                expect( is.typedArray.int8( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.int8.pass.indexOf( key ) !== -1 ];
-            } );
-        } );
-    } );
-    
-    describe( '.typedArray.int16', function(){
-        it( 'should be a function', function(){
-            expect( is.typedArray.int16 ).to.be.a( 'function' );
-        } );
-        
-        it( 'should meet expectations', function(){
-            Object.keys( CONSTANTS ).forEach( function( key ){
-                expect( is.typedArray.int16( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.int16.pass.indexOf( key ) !== -1 ];
-            } );
-        } );
-    } );
-    
-    describe( '.typedArray.int32', function(){
-        it( 'should be a function', function(){
-            expect( is.typedArray.int32 ).to.be.a( 'function' );
-        } );
-        
-        it( 'should meet expectations', function(){
-            Object.keys( CONSTANTS ).forEach( function( key ){
-                expect( is.typedArray.int32( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.int32.pass.indexOf( key ) !== -1 ];
-            } );
-        } );
-    } );
-    
-    describe( '.typedArray.uint8', function(){
-        it( 'should be a function', function(){
-            expect( is.typedArray.uint8 ).to.be.a( 'function' );
-        } );
-        
-        it( 'should meet expectations', function(){
-            Object.keys( CONSTANTS ).forEach( function( key ){
-                expect( is.typedArray.uint8( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.uint8.pass.indexOf( key ) !== -1 ];
-            } );
-        } );
-    } );
-    
-    describe( '.typedArray.uint8Clamped', function(){
-        it( 'should be a function', function(){
-            expect( is.typedArray.uint8Clamped ).to.be.a( 'function' );
-        } );
-        
-        it( 'should meet expectations', function(){
-            Object.keys( CONSTANTS ).forEach( function( key ){
-                expect( is.typedArray.uint8Clamped( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.uint8Clamped.pass.indexOf( key ) !== -1 ];
-            } );
-        } );
-    } );
-    
-    describe( '.typedArray.uint16', function(){
-        it( 'should be a function', function(){
-            expect( is.typedArray.uint16 ).to.be.a( 'function' );
-        } );
-        
-        it( 'should meet expectations', function(){
-            Object.keys( CONSTANTS ).forEach( function( key ){
-                expect( is.typedArray.uint16( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.uint16.pass.indexOf( key ) !== -1 ];
-            } );
-        } );
-    } );
-    
-    describe( '.typedArray.uint32', function(){
-        it( 'should be a function', function(){
-            expect( is.typedArray.uint32 ).to.be.a( 'function' );
-        } );
-        
-        it( 'should meet expectations', function(){
-            Object.keys( CONSTANTS ).forEach( function( key ){
-                expect( is.typedArray.uint32( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.uint32.pass.indexOf( key ) !== -1 ];
             } );
         } );
     } );
