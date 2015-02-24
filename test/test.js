@@ -1,464 +1,414 @@
 var expect      = require( 'chai' ).expect,
-	is 		    = require( '../' ),
-	
-	MAX_ARRAY_LENGTH = Math.pow( 2, 53 ) - 1;
+    is 		    = require( '../' ),
+    
+    MAX_ARRAY_LENGTH = Math.pow( 2, 53 ) - 1;
+
+const CONSTANTS = require( './constants' ),
+    EXPECTATIONS = require( './expectations' );
 
 describe( 'is', function(){
-	
-	beforeEach( function(){
-	    
-	} );
-	
-	it( 'should be a function', function(){
-		expect( typeof is ).to.equal( 'function' );
-	} );
-	
-	it( 'should return a kind', function(){
-		expect( typeof is( 10	) ).to.equal( 'string' );
-		expect( typeof is( '10'	) ).to.equal( 'string' );
-		expect( typeof is( true	) ).to.equal( 'string' );
-		expect( typeof is( []	) ).to.equal( 'string' );
-		expect( typeof is( {}	) ).to.equal( 'string' );
-	} );
-	
-	it( 'should compare kinds', function(){
-		expect( typeof is( 10	, 'Number'	) ).to.equal( 'boolean' );
-		expect( typeof is( '10'	, 'String'	) ).to.equal( 'boolean' );
-		expect( typeof is( true	, 'Boolean'	) ).to.equal( 'boolean' );
-		expect( typeof is( []	, 'Array'	) ).to.equal( 'boolean' );
-		expect( typeof is( {}	, 'Object'	) ).to.equal( 'boolean' );
-	} );
-	
-	describe( '.array', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.array ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept arrays', function(){
-			expect( is.array( []					) ).to.be.true;
-			expect( is.array( [ 1, 2, 3 ]			) ).to.be.true;
-			expect( is.array( new Array( 4, 5, 6 )	) ).to.be.true;
-		} );
-		
-		it( 'should reject non-arrays', function(){
-			expect( is.array( {}		) ).to.be.false;
-			expect( is.array( undefined	) ).to.be.false;
-			expect( is.array( null		) ).to.be.false;
-			expect( is.array( "10"		) ).to.be.false;
-			expect( is.array( true		) ).to.be.false;
-			expect( is.array( NaN		) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.arrayLike', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.arrayLike ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept arrayLikes', function(){
-			expect( is.arrayLike( arguments		) ).to.be.true;
-			expect( is.arrayLike( [ 1, 2, 3 ]	) ).to.be.true;
-			expect( is.arrayLike( { length: 0 }	) ).to.be.true;
-			expect( is.arrayLike( { length: MAX_ARRAY_LENGTH } ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-arrayLikes', function(){
-			expect( is.arrayLike( { length: MAX_ARRAY_LENGTH + 1 } ) ).to.be.false;
-			expect( is.arrayLike( {}		) ).to.be.false;
-			expect( is.arrayLike( undefined	) ).to.be.false;
-			expect( is.arrayLike( null		) ).to.be.false;
-			expect( is.arrayLike( "10"		) ).to.be.false;
-			expect( is.arrayLike( true		) ).to.be.false;
-			expect( is.arrayLike( NaN		) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.boolean', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.boolean ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept booleans', function(){
-			expect( is.boolean( true ) ).to.be.true;
-			expect( is.boolean( false ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-booleans', function(){
-			expect( is.boolean( {}			) ).to.be.false;
-			expect( is.boolean( undefined	) ).to.be.false;
-			expect( is.boolean( null		) ).to.be.false;
-			expect( is.boolean( "10"		) ).to.be.false;
-			expect( is.boolean( 'true'		) ).to.be.false;
-			expect( is.boolean( NaN			) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.date', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.date ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept dates', function(){
-			expect( is.date( new Date() ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-dates', function(){
-			expect( is.date( {}			) ).to.be.false;
-			expect( is.date( undefined	) ).to.be.false;
-			expect( is.date( null		) ).to.be.false;
-			expect( is.date( "10"		) ).to.be.false;
-			expect( is.date( 'true'		) ).to.be.false;
-			expect( is.date( NaN		) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.empty', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.empty ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept empty values', function(){
-			expect( is.empty( [] ) ).to.be.true;
-			expect( is.empty( {} ) ).to.be.true;
-			expect( is.empty( '' ) ).to.be.true;
-			expect( is.empty( Object.create( null ) ) ).to.be.true;
-			expect( is.empty( function(){} ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-empty values', function(){
-			expect( is.empty( [ 10 ]	) ).to.be.false;
-			expect( is.empty( { id: 5 }	) ).to.be.false;
-			expect( is.empty( undefined	) ).to.be.false;
-			expect( is.empty( null		) ).to.be.false;
-			expect( is.empty( "10"		) ).to.be.false;
-			expect( is.empty( 'true'	) ).to.be.false;
-			expect( is.empty( NaN		) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.error', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.error ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept error values', function(){
-			expect( is.error( new Error() ) ).to.be.true;
-			expect( is.error( new TypeError() ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-error values', function(){
-			expect( is.error( [ 10 ]	) ).to.be.false;
-			expect( is.error( { id: 5 }	) ).to.be.false;
-			expect( is.error( undefined	) ).to.be.false;
-			expect( is.error( null		) ).to.be.false;
-			expect( is.error( "10"		) ).to.be.false;
-			expect( is.error( 'true'	) ).to.be.false;
-			expect( is.error( NaN		) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.number.finite', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.number.finite ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept finite values', function(){
-			expect( is.number.finite( -10	) ).to.be.true;
-			expect( is.number.finite( +10	) ).to.be.true;
-			expect( is.number.finite( 10	) ).to.be.true;
-			expect( is.number.finite( 2.5	) ).to.be.true;
-			expect( is.number.finite( 0xff	) ).to.be.true;
-			expect( is.number.finite( 0144	) ).to.be.true;
-		} );
-		
-		it( 'should reject non-finite values', function(){
-			expect( is.number.finite( Infinity		) ).to.be.false;
-			expect( is.number.finite( [ 10 ]		) ).to.be.false;
-			expect( is.number.finite( { id: 5 }	) ).to.be.false;
-			expect( is.number.finite( undefined	) ).to.be.false;
-			expect( is.number.finite( null			) ).to.be.false;
-			expect( is.number.finite( "10"			) ).to.be.false;
-			expect( is.number.finite( 'true'		) ).to.be.false;
-			expect( is.number.finite( NaN			) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.host', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.host ).to.equal( 'function' );
-		} );
-	} );
-	
-	describe( '.number.integer', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.number.integer ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept integers', function(){
-			expect( is.number.integer( -10				) ).to.be.true;
-			expect( is.number.integer( +10				) ).to.be.true;
-			expect( is.number.integer( 10				) ).to.be.true;
-			expect( is.number.integer( 0xff			) ).to.be.true;
-			expect( is.number.integer( 0144			) ).to.be.true;
-		} );
-		
-		it( 'should reject non-integers', function(){
-			expect( is.number.integer( 2.5			) ).to.be.false;
-			expect( is.number.integer( []			) ).to.be.false;
-			expect( is.number.integer( {}			) ).to.be.false;
-			expect( is.number.integer( undefined	) ).to.be.false;
-			expect( is.number.integer( null		) ).to.be.false;
-			expect( is.number.integer( "10"		) ).to.be.false;
-			expect( is.number.integer( true		) ).to.be.false;
-			expect( is.number.integer( NaN			) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.null', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.null ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept null', function(){
-			expect( is.null( null ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-null', function(){
-			expect( is.null( []			) ).to.be.false;
-			expect( is.null( {}			) ).to.be.false;
-			expect( is.null( undefined	) ).to.be.false;
-			expect( is.null( "10"		) ).to.be.false;
-			expect( is.null( true		) ).to.be.false;
-			expect( is.null( NaN		) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.number', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.number ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept numbers', function(){
-			expect( is.number( -10				) ).to.be.true;
-			expect( is.number( +10				) ).to.be.true;
-			expect( is.number( 10				) ).to.be.true;
-			expect( is.number( 2.5				) ).to.be.true;
-			expect( is.number( 0xff				) ).to.be.true;
-			expect( is.number( 0144				) ).to.be.true;
-		} );
-		
-		it( 'should reject non-numbers', function(){
-			expect( is.number( []			) ).to.be.false;
-			expect( is.number( {}			) ).to.be.false;
-			expect( is.number( undefined	) ).to.be.false;
-			expect( is.number( null			) ).to.be.false;
-			expect( is.number( "10"			) ).to.be.false;
-			expect( is.number( true			) ).to.be.false;
-			expect( is.number( NaN			) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.numeric', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.numeric ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept numbers', function(){
-			expect( is.numeric( -10				) ).to.be.true;
-			expect( is.numeric( +10				) ).to.be.true;
-			expect( is.numeric( 10				) ).to.be.true;
-			expect( is.numeric( 2.5				) ).to.be.true;
-			expect( is.numeric( 0xff			) ).to.be.true;
-			expect( is.numeric( 0144			) ).to.be.true;
-			expect( is.numeric( new Number( 100	) ) ).to.be.true;
-		} );
-		
-		it( 'should accept numeric strings', function(){
-			expect( is.numeric( "10"	) ).to.be.true;
-			expect( is.numeric( '100'	) ).to.be.true;
-			expect( is.numeric( '2.5'	) ).to.be.true;
-		} );
-		
-		it( 'should reject non-numerics', function(){
-			expect( is.numeric( []			) ).to.be.false;
-			expect( is.numeric( {}			) ).to.be.false;
-			expect( is.numeric( undefined	) ).to.be.false;
-			expect( is.numeric( null		) ).to.be.false;
-			expect( is.numeric( true		) ).to.be.false;
-			expect( is.numeric( NaN			) ).to.be.false;
-		} )
-	} );
-	
-	describe( '.object', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.object ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept object values', function(){
-			expect( is.object( {} ) ).to.be.true;
-			expect( is.object( [] ) ).to.be.true;
-			expect( is.object( new Boolean( true ) ) ).to.be.true;
-			expect( is.object( new Number( 10 ) ) ).to.be.true;
-			expect( is.object( new String( 'hello' ) ) ).to.be.true;
-			expect( is.object( new Date() ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-object values', function(){
-			expect( is.object( null			) ).to.be.false;
-			expect( is.object( undefined	) ).to.be.false;
-			expect( is.object( false		) ).to.be.false;
-			expect( is.object( 10			) ).to.be.false;
-			expect( is.object( 'hello'		) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.object.plain', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.object.plain ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept plain object values', function(){
-			expect( is.object.plain( {} ) ).to.be.true;
-			expect( is.object.plain( { id: 5 } ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-plain object values', function(){
-			expect( is.object.plain( [] ) ).to.be.false;
-			expect( is.object.plain( new Boolean( true ) ) ).to.be.false;
-			expect( is.object.plain( new Number( 10 ) ) ).to.be.false;
-			expect( is.object.plain( new String( 'hello' ) ) ).to.be.false;
-			expect( is.object.plain( new Date() ) ).to.be.false;
-			expect( is.object.plain( null		) ).to.be.false;
-			expect( is.object.plain( undefined	) ).to.be.false;
-			expect( is.object.plain( false		) ).to.be.false;
-			expect( is.object.plain( 10			) ).to.be.false;
-			expect( is.object.plain( 'hello'		) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.primitive', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.primitive ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept primitive values', function(){
-			expect( is.primitive( null ) ).to.be.true;
-			expect( is.primitive( undefined ) ).to.be.true;
-			expect( is.primitive( true ) ).to.be.true;
-			expect( is.primitive( 5 ) ).to.be.true;
-			expect( is.primitive( 'hello' ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-primitive values', function(){
-			expect( is.primitive( [] ) ).to.be.false;
-			expect( is.primitive( {} ) ).to.be.false;
-			expect( is.primitive( function(){} ) ).to.be.false;
-			expect( is.primitive( new Boolean( true ) ) ).to.be.false;
-			expect( is.primitive( new Number( 10 ) ) ).to.be.false;
-			expect( is.primitive( new String( 'hello' ) ) ).to.be.false;
-			expect( is.primitive( new Date() ) ).to.be.false;
-		} );
-	} );
-	
-	/*
-	describe( '.promise', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.promise ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept promise values', function(){
-			expect( is.promise( new Promise( function(){} ) ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-promise values', function(){
-			expect( is.promise( [] ) ).to.be.false;
-			expect( is.promise( {} ) ).to.be.false;
-			expect( is.promise( function(){} ) ).to.be.false;
-			expect( is.promise( new Boolean( true ) ) ).to.be.false;
-			expect( is.promise( new Number( 10 ) ) ).to.be.false;
-			expect( is.promise( new String( 'hello' ) ) ).to.be.false;
-			expect( is.promise( new Date() ) ).to.be.false;
-		} );
-	} );
-	*/
-	
-	describe( '.regExp', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.regExp ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept regular expression values', function(){
-			expect( is.regExp( /\s+/ ) ).to.be.true;
-			expect( is.regExp( new RegExp( '\s+' ) ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-regular expression values', function(){
-			expect( is.regExp( [] ) ).to.be.false;
-			expect( is.regExp( {} ) ).to.be.false;
-			expect( is.regExp( function(){} ) ).to.be.false;
-			expect( is.regExp( new Boolean( true ) ) ).to.be.false;
-			expect( is.regExp( new Number( 10 ) ) ).to.be.false;
-			expect( is.regExp( new String( 'hello' ) ) ).to.be.false;
-			expect( is.regExp( new Date() ) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.string', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.string ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept string values', function(){
-			expect( is.string( 'hello' ) ).to.be.true;
-			expect( is.string( "goodbye" ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-string values', function(){
-			expect( is.string( [] ) ).to.be.false;
-			expect( is.string( {} ) ).to.be.false;
-			expect( is.string( function(){} ) ).to.be.false;
-			expect( is.string( true ) ).to.be.false;
-			expect( is.string( 10 ) ).to.be.false;
-			expect( is.string( new Date() ) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.thenable', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.thenable ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept thenable values', function(){
-			expect( is.thenable( { then: function(){} } ) ).to.be.true;
-		} );
-		
-		it( 'should reject non-thenable values', function(){
-			expect( is.thenable( [] ) ).to.be.false;
-			expect( is.thenable( {} ) ).to.be.false;
-			expect( is.thenable( function(){} ) ).to.be.false;
-			expect( is.thenable( true ) ).to.be.false;
-			expect( is.thenable( 10 ) ).to.be.false;
-			expect( is.thenable( new Date() ) ).to.be.false;
-		} );
-	} );
-	
-	describe( '.undefined', function(){
-		it( 'should be a function', function(){
-			expect( typeof is.undefined ).to.equal( 'function' );
-		} );
-		
-		it( 'should accept undefined values', function(){
-			expect( is.undefined( undefined ) ).to.be.true;
-		} );
-		
-		it( 'should reject defined values', function(){
-			expect( is.undefined( [] ) ).to.be.false;
-			expect( is.undefined( {} ) ).to.be.false;
-			expect( is.undefined( function(){} ) ).to.be.false;
-			expect( is.undefined( true ) ).to.be.false;
-			expect( is.undefined( 10 ) ).to.be.false;
-			expect( is.undefined( new Date() ) ).to.be.false;
-		} );
-	} );
-	
+    
+    beforeEach( function(){
+        
+    } );
+    
+    it( 'should be a function', function(){
+        expect( typeof is ).to.equal( 'function' );
+    } );
+    
+    it( 'should return a kind', function(){
+        expect( typeof is( 10	) ).to.equal( 'string' );
+        expect( typeof is( '10'	) ).to.equal( 'string' );
+        expect( typeof is( true	) ).to.equal( 'string' );
+        expect( typeof is( []	) ).to.equal( 'string' );
+        expect( typeof is( {}	) ).to.equal( 'string' );
+    } );
+    
+    it( 'should compare kinds', function(){
+        expect( typeof is( 10	, 'Number'	) ).to.equal( 'boolean' );
+        expect( typeof is( '10'	, 'String'	) ).to.equal( 'boolean' );
+        expect( typeof is( true	, 'Boolean'	) ).to.equal( 'boolean' );
+        expect( typeof is( []	, 'Array'	) ).to.equal( 'boolean' );
+        expect( typeof is( {}	, 'Object'	) ).to.equal( 'boolean' );
+    } );
+    
+    describe( '.array', function(){
+        it( 'should be a function', function(){
+            expect( is.array ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.array( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.array.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.arrayLike', function(){
+        it( 'should be a function', function(){
+            expect( is.arrayLike ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.arrayLike( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.arrayLike.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.boolean', function(){
+        it( 'should be a function', function(){
+            expect( is.boolean ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.boolean( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.boolean.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.date', function(){
+        it( 'should be a function', function(){
+            expect( is.date ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.date( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.date.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.empty', function(){
+        it( 'should be a function', function(){
+            expect( is.empty ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.empty( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.empty.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.error', function(){
+        it( 'should be a function', function(){
+            expect( is.error ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.error( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.error.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.finite', function(){
+        it( 'should be a function', function(){
+            expect( is.finite ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.finite( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.finite.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.function', function(){
+        it( 'should be a function', function(){
+            expect( is.function ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.function( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.function.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.host', function(){
+        it( 'should be a function', function(){
+            expect( is.host ).to.be.a( 'function' );
+        } );
+    } );
+    
+    describe( '.nan', function(){
+        it( 'should be a function', function(){
+            expect( is.nan ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.nan( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.nan.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.null', function(){
+        it( 'should be a function', function(){
+            expect( is.null ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.null( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.null.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.number', function(){
+        it( 'should be a function', function(){
+            expect( is.number ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.number( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.number.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.number.integer', function(){
+        it( 'should be a function', function(){
+            expect( is.number.integer ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.number.integer( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.number.integer.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.numeric', function(){
+        it( 'should be a function', function(){
+            expect( is.numeric ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.numeric( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.numeric.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.object', function(){
+        it( 'should be a function', function(){
+            expect( is.object ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.object( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.object.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.object.plain', function(){
+        it( 'should be a function', function(){
+            expect( is.object.plain ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.object.plain( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.object.plain.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.primitive', function(){
+        it( 'should be a function', function(){
+            expect( is.primitive ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.primitive( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.primitive.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.promise', function(){
+        it( 'should be a function', function(){
+            expect( is.promise ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.promise( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.promise.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.regExp', function(){
+        it( 'should be a function', function(){
+            expect( is.regExp ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.regExp( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.regExp.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.string', function(){
+        it( 'should be a function', function(){
+            expect( is.string ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.string( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.string.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.thenable', function(){
+        it( 'should be a function', function(){
+            expect( is.thenable ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.thenable( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.thenable.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.typedArray', function(){
+        it( 'should be a function', function(){
+            expect( is.typedArray ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.typedArray( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    
+    describe( '.typedArray.float32', function(){
+        it( 'should be a function', function(){
+            expect( is.typedArray.float32 ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.typedArray.float32( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.float32.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.typedArray.float64', function(){
+        it( 'should be a function', function(){
+            expect( is.typedArray.float64 ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.typedArray.float64( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.float64.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.typedArray.int8', function(){
+        it( 'should be a function', function(){
+            expect( is.typedArray.int8 ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.typedArray.int8( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.int8.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.typedArray.int16', function(){
+        it( 'should be a function', function(){
+            expect( is.typedArray.int16 ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.typedArray.int16( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.int16.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.typedArray.int32', function(){
+        it( 'should be a function', function(){
+            expect( is.typedArray.int32 ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.typedArray.int32( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.int32.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.typedArray.uint8', function(){
+        it( 'should be a function', function(){
+            expect( is.typedArray.uint8 ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.typedArray.uint8( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.uint8.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.typedArray.uint8Clamped', function(){
+        it( 'should be a function', function(){
+            expect( is.typedArray.uint8Clamped ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.typedArray.uint8Clamped( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.uint8Clamped.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.typedArray.uint16', function(){
+        it( 'should be a function', function(){
+            expect( is.typedArray.uint16 ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.typedArray.uint16( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.uint16.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.typedArray.uint32', function(){
+        it( 'should be a function', function(){
+            expect( is.typedArray.uint32 ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.typedArray.uint32( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.typedArray.uint32.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
+    describe( '.undefined', function(){
+        it( 'should be a function', function(){
+            expect( is.undefined ).to.be.a( 'function' );
+        } );
+        
+        it( 'should meet expectations', function(){
+            Object.keys( CONSTANTS ).forEach( function( key ){
+                expect( is.undefined( CONSTANTS[ key ] ), key ).to.be[ EXPECTATIONS.undefined.pass.indexOf( key ) !== -1 ];
+            } );
+        } );
+    } );
+    
 } );
