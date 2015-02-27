@@ -8,9 +8,9 @@
   "author": "Jeff Rose",
   "license": "Apache-2.0",
   "keywords": [
-      
+    "kind", "kindjs", "kindof", "typeof"
   ],
-  "main": "index.js",
+  "main": "kind.js",
   "dependencies": {
       
   },

@@ -1,28 +1,29 @@
 ( function( root, factory ){
-    var // Simple feature detection
-        features = {
-            'arraybuffer'               : 'ArrayBuffer'         in root,
-            'array-isarray'             : 'isArray'             in Array,
-            'comment'                   : 'Comment'             in root,
-            'document'                  : 'Document'            in root,
-            'documentfragment'          : 'DocumentFragment'    in root,
-            'dataview'                  : 'DataView'            in root,
-            'element'                   : 'Element'             in root,
-            'map'                       : 'Map'                 in root,
-            'node'                      : 'Node'                in root,
-            'number-isfinite'           : 'isFinite'            in Number,
-            'number-isinteger'          : 'isInteger'           in Number,
-            'number-isnan'              : 'isNaN'               in Number,
-            'number-issafeinteger'      : 'isSafeInteger'       in Number,
-            'number-max_safe_integer'   : 'MAX_SAFE_INTEGER'    in Number,
-            'number-min_safe_integer'   : 'MIN_SAFE_INTEGER'    in Number,
-            'promise'                   : 'Promise'             in root,
-            'set'                       : 'Set'                 in root,
-            'symbol'                    : 'Symbol'              in root,
-            'text'                      : 'Text'                in root,
-            'weakmap'                   : 'WeakMap'             in root,
-            'weakset'                   : 'WeakSet'             in root
-        };
+    // Simple feature detection
+    var features = {
+        'arraybuffer'               : 'ArrayBuffer'         in root,
+        'array-isarray'             : 'isArray'             in Array,
+        'comment'                   : 'Comment'             in root,
+        'document'                  : 'Document'            in root,
+        'documentfragment'          : 'DocumentFragment'    in root,
+        'dataview'                  : 'DataView'            in root,
+        'element'                   : 'Element'             in root,
+        'map'                       : 'Map'                 in root,
+        'node'                      : 'Node'                in root,
+        'number-isfinite'           : 'isFinite'            in Number,
+        'number-isinteger'          : 'isInteger'           in Number,
+        'number-isnan'              : 'isNaN'               in Number,
+        'number-issafeinteger'      : 'isSafeInteger'       in Number,
+        'number-max_safe_integer'   : 'MAX_SAFE_INTEGER'    in Number,
+        'number-min_safe_integer'   : 'MIN_SAFE_INTEGER'    in Number,
+        'object-create'             : 'create'              in Object,
+        'promise'                   : 'Promise'             in root,
+        'set'                       : 'Set'                 in root,
+        'symbol'                    : 'Symbol'              in root,
+        'text'                      : 'Text'                in root,
+        'weakmap'                   : 'WeakMap'             in root,
+        'weakset'                   : 'WeakSet'             in root
+    };
     
     function has( id ){
         return typeof id !== 'undefined' ?
@@ -76,7 +77,9 @@
         /**
          * @namespace
          */
-        kind = {};
+        kind = has( 'object-create' ) ?
+            Object.create( null ) :
+            {};
     
     // Duck typing ES6 Map
     function isMapAPI( value ){
@@ -107,17 +110,17 @@
     
     // Duck typing for non-Weak ES6 collections
     function isIterableCollection( value ){
-        return kind.is.iterable( value ) && kind.is.function( value.clear ) && kind.is.function( value.entries ) && kind.is.function( value.forEach ) && kind.is.function( value.keys ) && kind.is.function( value.values ) && isSafeSize( value.size );
+        return kind.is.iterable( value ) && kind.is[ 'function' ]( value.clear ) && kind.is[ 'function' ]( value.entries ) && kind.is[ 'function' ]( value.forEach ) && kind.is[ 'function' ]( value.keys ) && kind.is[ 'function' ]( value.values ) && isSafeSize( value.size );
     }
     
     // Duck typing ES6 WeakMap
     function isWeakMapAPI( value ){
-        return kind.is.object( value ) && kind.is.function( value.delete ) && kind.is.function( value.get ) && kind.is.function( value.has ) && kind.is.function( value.set );	
+        return kind.is.object( value ) && kind.is[ 'function' ]( value[ 'delete' ] ) && kind.is[ 'function' ]( value.get ) && kind.is[ 'function' ]( value.has ) && kind.is[ 'function' ]( value.set );	
     }
     
     // Ducktyping ES6 WeakSet
     function isWeakSetAPI( value ){
-        return kind.is.object( value ) && kind.is.function( value.add ) && kind.is.function( value.delete ) && kind.is.function( value.has );	
+        return kind.is.object( value ) && kind.is[ 'function' ]( value.add ) && kind.is[ 'function' ]( value[ 'delete' ] ) && kind.is[ 'function' ]( value.has );	
     }
     
     /**
@@ -157,8 +160,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is an Arguments.
      */ 
-    kind.is.arguments = function( value ){
-        return kind.is.arrayLike( value ) && kind.is.function( value.callee ) || kind.is( value, 'Arguments' );	
+    kind.is[ 'arguments' ] = function( value ){
+        return kind.is.arrayLike( value ) && kind.is[ 'function' ]( value.callee ) || kind.is( value, 'Arguments' );	
     };
     
     /**
@@ -180,7 +183,7 @@
     kind.is.arrayBuffer = function( value ){
         return has( 'arraybuffer' ) ?
             value instanceof ArrayBuffer :
-            kind.is.object( value ) && isSafeSize( value.byteLength ) && kind.is.function( value.slice );
+            kind.is.object( value ) && isSafeSize( value.byteLength ) && kind.is[ 'function' ]( value.slice );
     };
     
     /**
@@ -190,7 +193,7 @@
      */ 
     kind.is.arrayLike = function( value ){
         // Functions have a length property and must be explicitly excluded
-        return kind.is.object( value ) && !kind.is.function( value ) && isSafeSize( value.length );
+        return kind.is.object( value ) && !kind.is[ 'function' ]( value ) && isSafeSize( value.length );
     };
     
     /**
@@ -218,7 +221,7 @@
             if( dataView ){
                 var typedArrayTypes = 'Float32 Float64 Int8 Int16 Int32 Uint8 Uint16 Uint32'.split( ' ' );
                 for( var i = 0, l = typedArrayTypes.length; i < l && dataView; i++ ){
-                    dataView = kind.is.function( value[ 'get' + typedArrayTypes[ i ] ] ) && kind.is.function( value[ 'set' + typedArrayTypes[ i ] ] );
+                    dataView = kind.is[ 'function' ]( value[ 'get' + typedArrayTypes[ i ] ] ) && kind.is[ 'function' ]( value[ 'set' + typedArrayTypes[ i ] ] );
                 }
             }
         }
@@ -247,7 +250,7 @@
             empty = false;
         } else if( kind.is.string( value ) || kind.is.arrayLike( value ) ) {
             empty = !value.length;
-        } else if( kind.is.object( value ) || kind.is.function( value ) ) {
+        } else if( kind.is.object( value ) || kind.is[ 'function' ]( value ) ) {
             empty = true;
     
             for( var key in value ){
@@ -275,7 +278,7 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Function.
      */ 
-    kind.is.function = function( value ){
+    kind.is[ 'function' ] = function( value ){
         return typeof value === 'function';
     };
     
@@ -297,7 +300,7 @@
      * @returns {Boolean} Whether or not value is iterable.
      */ 
     kind.is.iterable = function( value ){
-        return has( 'symbol' ) && kind.is.symbol( Symbol.iterator ) && kind.is.function( value[ Symbol.iterator ] ) || kind.is.object( value ) && ( kind.is.function( value[ '@@iterator' ] ) || kind.is.function( value.iterator ) );
+        return has( 'symbol' ) && kind.is.symbol( Symbol.iterator ) && kind.is[ 'function' ]( value[ Symbol.iterator ] ) || kind.is.object( value ) && ( kind.is[ 'function' ]( value[ '@@iterator' ] ) || kind.is[ 'function' ]( value.iterator ) );
     };
     
     /**
@@ -476,7 +479,7 @@
      * @returns {Boolean} Whether or not value is a Promise.
      */ 
     kind.is.promise = function( value ){
-        return has( 'promise' ) && ( value instanceof Promise || kind.is( value, 'Promise' ) ) || ( kind.is.thenable( value ) && kind.is.function( value.catch ) );
+        return has( 'promise' ) && ( value instanceof Promise || kind.is( value, 'Promise' ) ) || ( kind.is.thenable( value ) && kind.is[ 'function' ]( value[ 'catch' ] ) );
     };
     
     /**
@@ -485,7 +488,7 @@
      * @returns {Boolean} Whether or not value is a RegExp.
      */ 
     kind.is.regExp = function( value ){
-        return value instanceof RegExp || kind.is.object( value ) && kind.is.function( value.test ) && kind.is.function( value.exec ) && kind.is.boolean( value.ignoreCase ) || kind.is( value, 'RegExp' );
+        return value instanceof RegExp || kind.is.object( value ) && kind.is[ 'function' ]( value.test ) && kind.is[ 'function' ]( value.exec ) && kind.is.boolean( value.ignoreCase ) || kind.is( value, 'RegExp' );
     };
     
     /**
@@ -514,7 +517,7 @@
     kind.is.symbol = function( value ){
         return has( 'symbol' ) ?
             typeof value === 'symbol' || kind.is( value, 'Symbol' ) :
-            kind.is.function( value ) && kind.is.function( value.for ) && kind.is.function( value.keyFor );
+            kind.is[ 'function' ]( value ) && kind.is[ 'function' ]( value.for ) && kind.is[ 'function' ]( value.keyFor );
     }
     
     /**
@@ -523,7 +526,7 @@
      * @returns {Boolean} Whether or not value is thenable.
      */ 
     kind.is.thenable = function( value ){
-        return kind.is.object( value ) && kind.is.function( value.then );	
+        return kind.is.object( value ) && kind.is[ 'function' ]( value.then );	
     };
     
     /**

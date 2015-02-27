@@ -1,6 +1,6 @@
 {
   "name": "kind.js",
-  "main": "index.js",
+  "main": "kind.js",
   "version": "0.3.0",
   "homepage": "https://github.com/jeffrose/kind.js",
   "authors": [
