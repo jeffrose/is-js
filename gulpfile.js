@@ -5,11 +5,11 @@ var gulp = require( 'gulp' ),
     mocha = require( 'gulp-mocha' );
 
 gulp.task( 'test', function( done ){
-    gulp.src( [ 'index.js' ] )
+    gulp.src( 'kind.js' )
         .pipe( istanbul() )
         .pipe( istanbul.hookRequire() )
         .on( 'finish', function(){
-            gulp.src( [ 'test/*.js' ] )
+            gulp.src( 'test/test.js', { read: false } )
                 .pipe( mocha() )
                 .pipe( istanbul.writeReports() )
                 .on( 'end', done );

@@ -22,133 +22,143 @@
             'text'                      : 'Text'                in root,
             'weakmap'                   : 'WeakMap'             in root,
             'weakset'                   : 'WeakSet'             in root
-        },
-        
-        /**
-         * @function
-         * @param {String} id
-         * @returns {Boolean} Whether or not the feature represented by the id exists.
-         */
-        has = function( id ){
-            return features[ id ];	
         };
     
-    // AMD
+    function has( id ){
+        return typeof id !== 'undefined' ?
+            features[ id ] :
+            features;
+    }
+    
     if( typeof define === 'function' && define.amd ){
         define( function(){
             return factory( has );
         } );
-    
-    // Node.js
-    } else if( typeof exports === 'object' ){
+    } else if( typeof exports !== 'undefined' && typeof module !== 'undefined' ){
         module.exports = factory( has );
-    
-    // Browser global
     } else {
-        root.is = factory( has );
+        root.kind = factory( has );
     }
-}( this, function( has, UNDEFINED ){
-    var hasOwnProperty   = Object.prototype.hasOwnProperty,
-        toString         = Object.prototype.toString,
+} )( this, function( has ){
+    var
+        hasOwnProperty  = Object.prototype.hasOwnProperty,
+        toString        = Object.prototype.toString,
         
-        KIND_REGEX       = /^\[object (.*)\]$/,
+        /**
+         * @const
+         */
+        KIND_REGEX = /^\[object (.*)\]$/,
         
+        /**
+         * @const
+         */
         MAX_SAFE_INTEGER = has( 'number-max_safe_integer' ) ?
             Number.MAX_SAFE_INTEGER :
             Math.pow( 2, 53 ) - 1,
+        
+        /**
+         * @const
+         */
         MIN_SAFE_INTEGER = has( 'number-min_safe_integer' ) ?
             Number.MIN_SAFE_INTEGER :
             -( MAX_SAFE_INTEGER ),
             
-        NON_HOST_KINDS   = {
+        /**
+         * @const
+         */    
+        NON_HOST_KINDS = {
             'Boolean'    : true,
             'Number'     : true,
             'String'     : true,
-            'Undefined'  : true
+            'undefined'  : true
         },
         
         /**
-         * @function
-         * @param {*} value
-         * @returns {String} The kind of value, e.g. "String", "Number", etc.
-         */ 
-        kindOf = function( value ){
-            var kind;
-            
-            if( value === null ){
-                kind = 'Null';
-            } else if( value === UNDEFINED ){
-                kind = 'Undefined';
-            } else {
-                kind = KIND_REGEX.exec( toString.call( value ) )[ 1 ];
-            }
-            
-            return kind;
-        },
-        
-        /**
-         * @function
-         * @param {*} value
-         * @param {String} [kind]
-         * @returns {String|Boolean}
+         * @namespace
          */
-        is = function( value, kind ){
-            var result = kindOf( value );
-            
-            return kind !== UNDEFINED ?
-                result === kind :
-                result;
-        },
-        
-        // Duck typing for non-Weak ES6 collections
-        isIterableCollection = function( value ){
-            return is.iterable( value ) && is[ 'function' ]( value.clear ) && is[ 'function' ]( value.entries ) && is[ 'function' ]( value.forEach ) && is[ 'function' ]( value.keys ) && is[ 'function' ]( value.values ) && isSafeSize( value.size );
-        },
-        
-        // Duck typing ES6 Map
-        isMapAPI = function( value ){
-            return isWeakMapAPI( value ) && isIterableCollection( value );
-        },
-        
-        isPrimitiveBoolean = function( value ){
-            return value === !!value;	
-        },
-        
-        isPrimitiveNumber = function( value ){
-            return typeof value === 'number';	
-        },
-        
-        isPrimitiveString = function( value ){
-            return typeof value === 'string';	
-        },
-        
-        // Validity check for .length and .size properties
-        isSafeSize = function( size ){
-            return is.number( size ) && size >= 0 && is.number.safe( size );
-        },
-        
-        // Duck typing ES6 Set
-        isSetAPI = function( value ){
-            return isWeakSetAPI( value ) && isIterableCollection( value );
-        },
-        
-        // Duck typing ES6 WeakMap
-        isWeakMapAPI = function( value ){
-            return is.object( value ) && is[ 'function' ]( value[ 'delete' ] ) && is[ 'function' ]( value.get ) && is[ 'function' ]( value.has ) && is[ 'function' ]( value.set );	
-        },
-        
-        // Ducktyping ES6 WeakSet
-        isWeakSetAPI = function( value ){
-            return is.object( value ) && is[ 'function' ]( value.add ) && is[ 'function' ]( value[ 'delete' ] ) && is[ 'function' ]( value.has );	
-        };
+        kind = {};
+    
+    // Duck typing ES6 Map
+    function isMapAPI( value ){
+        return isWeakMapAPI( value ) && isIterableCollection( value );
+    }
+    
+    function isBooleanType( value ){
+        return value === !!value;
+    }
+    
+    function isNumberType( value ){
+        return typeof value === 'number';
+    }
+    
+    function isStringType( value ){
+        return typeof value === 'string';
+    }
+    
+    // Validity check for .length and .size properties
+    function isSafeSize( size ){
+        return kind.is.number( size ) && size >= 0 && kind.is.number.safe( size );
+    }
+    
+    // Duck typing ES6 Set
+    function isSetAPI( value ){
+        return isWeakSetAPI( value ) && isIterableCollection( value );
+    }
+    
+    // Duck typing for non-Weak ES6 collections
+    function isIterableCollection( value ){
+        return kind.is.iterable( value ) && kind.is.function( value.clear ) && kind.is.function( value.entries ) && kind.is.function( value.forEach ) && kind.is.function( value.keys ) && kind.is.function( value.values ) && isSafeSize( value.size );
+    }
+    
+    // Duck typing ES6 WeakMap
+    function isWeakMapAPI( value ){
+        return kind.is.object( value ) && kind.is.function( value.delete ) && kind.is.function( value.get ) && kind.is.function( value.has ) && kind.is.function( value.set );	
+    }
+    
+    // Ducktyping ES6 WeakSet
+    function isWeakSetAPI( value ){
+        return kind.is.object( value ) && kind.is.function( value.add ) && kind.is.function( value.delete ) && kind.is.function( value.has );	
+    }
+    
+    /**
+     * @function
+     * @param {*} value
+     * @param {String} kind
+     * @returns {Boolean}
+     */
+    function kindIs( value, kind ){
+        return kindOf( value ) === kind;
+    }
+    
+    /**
+     * @function
+     * @param {*} value
+     * @returns {String} The kind of value, e.g. "String", "Number", etc.
+     */ 
+    function kindOf( value ){
+        var kind;
+    
+        if( value === null ){
+            kind = 'Null';
+        } else if( value === undefined ){
+            kind = 'undefined';
+        } else {
+            kind = KIND_REGEX.exec( toString.call( value ) )[ 1 ];
+        }
+    
+        return kind;
+    }
+    
+    kind.of = kindOf;
+    kind.is = kindIs;
     
     /**
      * @function
      * @param {*} value
      * @returns {Boolean} Whether or not value is an Arguments.
      */ 
-    is[ 'arguments' ] = function isArguments( value ){
-        return is.arrayLike( value ) && is[ 'function' ]( value.callee ) || is( value, 'Arguments' );	
+    kind.is.arguments = function( value ){
+        return kind.is.arrayLike( value ) && kind.is.function( value.callee ) || kind.is( value, 'Arguments' );	
     };
     
     /**
@@ -156,10 +166,10 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is an Array.
      */ 
-    is.array = function isArray( value ){
+    kind.is.array = function( value ){
         return has( 'array-isarray' ) ?
             Array.isArray( value ) :
-            is( value, 'Array' );
+            kind.is( value, 'Array' );
     };
     
     /**
@@ -167,10 +177,10 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is an ArrayBuffer.
      */ 
-    is.arrayBuffer = function isArrayBuffer( value ){
+    kind.is.arrayBuffer = function( value ){
         return has( 'arraybuffer' ) ?
             value instanceof ArrayBuffer :
-            is.object( value ) && isSafeSize( value.byteLength ) && is[ 'function' ]( value.slice );
+            kind.is.object( value ) && isSafeSize( value.byteLength ) && kind.is.function( value.slice );
     };
     
     /**
@@ -178,9 +188,9 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is array-like.
      */ 
-    is.arrayLike = function isArrayLike( value ){
+    kind.is.arrayLike = function( value ){
         // Functions have a length property and must be explicitly excluded
-        return is.object( value ) && !is[ 'function' ]( value ) && isSafeSize( value.length );
+        return kind.is.object( value ) && !kind.is.function( value ) && isSafeSize( value.length );
     };
     
     /**
@@ -188,8 +198,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Boolean.
      */ 
-    is.boolean = function isBoolean( value ){
-        return isPrimitiveBoolean( value );
+    kind.is.boolean = function( value ){
+        return isBooleanType( value );
     };
     
     /**
@@ -197,18 +207,18 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a DataView.
      */ 
-    is.dataView = function isDataView( value ){
+    kind.is.dataView = function( value ){
         var dataView = false;
         
         if( has( 'dataView' ) ){
             dataView = value instanceof DataView;
         } else {
-            dataView = is.object( value ) && is.arrayBuffer( value.buffer );
+            dataView = kind.is.object( value ) && kind.is.arrayBuffer( value.buffer );
             // Only check the methods if it meets the properties criteria
             if( dataView ){
                 var typedArrayTypes = 'Float32 Float64 Int8 Int16 Int32 Uint8 Uint16 Uint32'.split( ' ' );
                 for( var i = 0, l = typedArrayTypes.length; i < l && dataView; i++ ){
-                    dataView = is[ 'function' ]( value[ 'get' + typedArrayTypes[ i ] ] ) && is[ 'function' ]( value[ 'set' + typedArrayTypes[ i ] ] );
+                    dataView = kind.is.function( value[ 'get' + typedArrayTypes[ i ] ] ) && kind.is.function( value[ 'set' + typedArrayTypes[ i ] ] );
                 }
             }
         }
@@ -221,8 +231,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Date.
      */ 
-    is.date = function isDate( value ){
-        return value instanceof Date || is( value, 'Date' );	
+    kind.is.date = function( value ){
+        return value instanceof Date || kind.is( value, 'Date' );	
     };
     
     /**
@@ -230,16 +240,16 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is empty.
      */ 
-    is.empty = function isEmpty( value ){
+    kind.is.empty = function( value ){
         var empty = false;
-
-        if( is.null( value ) ){
+    
+        if( kind.is.null( value ) ){
             empty = false;
-        } else if( is.string( value ) || is.arrayLike( value ) ) {
+        } else if( kind.is.string( value ) || kind.is.arrayLike( value ) ) {
             empty = !value.length;
-        } else if( is.object( value ) || is[ 'function' ]( value ) ) {
+        } else if( kind.is.object( value ) || kind.is.function( value ) ) {
             empty = true;
-
+    
             for( var key in value ){
                 if( hasOwnProperty.call( value, key ) ){
                     empty = false;
@@ -247,7 +257,7 @@
                 }
             }
         }
-
+    
         return empty;
     };
     
@@ -256,8 +266,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is an Error.
      */ 
-    is.error = function isError( value ){
-        return value instanceof Error || is( value, 'Error' );
+    kind.is.error = function( value ){
+        return value instanceof Error || kind.is( value, 'Error' );
     };
     
     /**
@@ -265,7 +275,7 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Function.
      */ 
-    is[ 'function' ] = function isFunction( value ){
+    kind.is.function = function( value ){
         return typeof value === 'function';
     };
     
@@ -274,8 +284,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a host object.
      */ 
-    is.host = function isHost( value ){
-        var kind = is( value );
+    kind.is.host = function( value ){
+        var kind = kind.is( value );
         return kind === 'Object' ?
             !!value :
             !NON_HOST_KINDS[ kind ];
@@ -286,8 +296,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is iterable.
      */ 
-    is.iterable = function isIterable( value ){
-        return has( 'symbol' ) && is.symbol( Symbol.iterator ) && is[ 'function' ]( value[ Symbol.iterator ] ) || is.object( value ) && ( is[ 'function' ]( value[ '@@iterator' ] ) || is[ 'function' ]( value.iterator ) );
+    kind.is.iterable = function( value ){
+        return has( 'symbol' ) && kind.is.symbol( Symbol.iterator ) && kind.is.function( value[ Symbol.iterator ] ) || kind.is.object( value ) && ( kind.is.function( value[ '@@iterator' ] ) || kind.is.function( value.iterator ) );
     };
     
     /**
@@ -295,7 +305,7 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Map.
      */ 
-    is.map = function isMap( value ){
+    kind.is.map = function( value ){
         return has( 'map' ) && value instanceof Map || isMapAPI( value );	
     };
     
@@ -304,10 +314,10 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is NaN.
      */ 
-    is.nan = function isNaN( value ){
+    kind.is.nan = function( value ){
         return has( 'number-isnan' ) ?
             Number.isNaN( value ) :
-            isPrimitiveNumber( value ) && isNaN( value );
+            isNumberType( value ) && isNaN( value );
     };
     
     /**
@@ -315,10 +325,10 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Node.
      */ 
-    is.node = function isNode( value ){
+    kind.is.node = function( value ){
         return has( 'node' ) ?
             value instanceof Node :
-            is.object( value ) && is.string( value.nodeName ) && isPrimitiveNumber( value.nodeType );
+            kind.is.object( value ) && kind.is.string( value.nodeName ) && isNumberType( value.nodeType );
     };
     
     /**
@@ -326,8 +336,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Comment node.
      */ 
-    is.node.comment = function isComment( value ){
-        return is.node( value ) && ( has( 'comment' ) ? value instanceof Comment : value.nodeType === 8 );
+    kind.is.node.comment = function( value ){
+        return kind.is.node( value ) && ( has( 'comment' ) ? value instanceof Comment : value.nodeType === 8 );
     };
     
     /**
@@ -335,8 +345,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Document node.
      */ 
-    is.node.document = function isDocument( value ){
-        return is.node( value ) && ( has( 'document' ) ? value instanceof Document : value.nodeType === 9 );
+    kind.is.node.document = function( value ){
+        return kind.is.node( value ) && ( has( 'document' ) ? value instanceof Document : value.nodeType === 9 );
     };
     
     /**
@@ -344,8 +354,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a DocumentFragment node.
      */ 
-    is.node.documentFragment = function isDocumentFragment( value ){
-        return is.node( value ) && ( has( 'documentfragment' ) ? value instanceof DocumentFragment : value.nodeType === 11 );
+    kind.is.node.documentFragment = function( value ){
+        return kind.is.node( value ) && ( has( 'documentfragment' ) ? value instanceof DocumentFragment : value.nodeType === 11 );
     };
     
     /**
@@ -353,8 +363,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is an Element node.
      */ 
-    is.node.element = function isElement( value ){
-        return is.node( value ) && ( has( 'element' ) ? value instanceof Element : value.nodeType === 1 );
+    kind.is.node.element = function( value ){
+        return kind.is.node( value ) && ( has( 'element' ) ? value instanceof Element : value.nodeType === 1 );
     };
     
     /**
@@ -362,8 +372,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Text node.
      */ 
-    is.node.text = function isText( value ){
-        return is.node( value ) && ( has( 'text' ) ? value instanceof Text : value.nodeType === 3 );
+    kind.is.node.text = function( value ){
+        return kind.is.node( value ) && ( has( 'text' ) ? value instanceof Text : value.nodeType === 3 );
     };
     
     /**
@@ -371,7 +381,7 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is null.
      */ 
-    is[ 'null' ] = function isNull( value ){
+    kind.is.null = function( value ){
         return value === null;
     };
     
@@ -380,11 +390,11 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Number.
      */ 
-    is.number = function isNumber( value ){
+    kind.is.number = function( value ){
         // Exclude Infinity and NaN from being numbers.
         return has( 'number-isfinite' ) ?
             Number.isFinite( value ) :
-            isPrimitiveNumber( value ) && isFinite( value );
+            isNumberType( value ) && isFinite( value );
     };
     
     /**
@@ -392,9 +402,9 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is finite.
      */ 
-    is.number.finite = function isFinite( value ){
-        // Since is.number() excludes Infinity and NaN, this is just an alias.
-        return is.number( value );
+    kind.is.number.finite = function( value ){
+        // Since kind.is.number() excludes Infinity and NaN, this is just an alias.
+        return kind.is.number( value );
     };
     
     /**
@@ -402,10 +412,10 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is an integer.
      */ 
-    is.number.integer = function isInteger( value ){
+    kind.is.number.integer = function( value ){
         return has( 'number-isinteger' ) ?
             Number.isInteger( value ) :
-            is.number( value ) && Math.floor( value ) === value;
+            kind.is.number( value ) && Math.floor( value ) === value;
     };
     
     /**
@@ -413,10 +423,10 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is safe.
      */ 
-    is.number.safe = function isSafe( value ){
+    kind.is.number.safe = function( value ){
         return has( 'number-issafeinteger' ) ?
             Number.isSafeInteger( value ) :
-            is.number( value ) && value <= MAX_SAFE_INTEGER && value >= MIN_SAFE_INTEGER;
+            kind.is.number( value ) && value <= MAX_SAFE_INTEGER && value >= MIN_SAFE_INTEGER;
     };
     
     /**
@@ -424,8 +434,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is numeric.
      */ 
-    is.numeric = function isNumeric( value ){
-        return is.number( parseFloat( value ) );	
+    kind.is.numeric = function( value ){
+        return kind.is.number( parseFloat( value ) );	
     };
     
     /**
@@ -433,8 +443,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is an Object.
      */ 
-    is.object = function isObject( value ){
-        return ( typeof value === 'object' || value instanceof Object ) && !is.null( value );
+    kind.is.object = function( value ){
+        return ( typeof value === 'object' || value instanceof Object ) && !kind.is.null( value );
     };
     
     /**
@@ -442,8 +452,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a plain Object.
      */ 
-    is.object.plain = function isPlain( value ){
-        return is.object( value ) && value.constructor === Object;
+    kind.is.object.plain = function( value ){
+        return kind.is.object( value ) && value.constructor === Object;
     };
     
     /**
@@ -451,13 +461,13 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a primitive.
      */ 
-    is.primitive = function isPrimitive( value ){
-        return	is.null( value )            ||
-                is.undefined( value )       ||
-                isPrimitiveBoolean( value ) ||
-                isPrimitiveNumber( value )  ||
-                isPrimitiveString( value )  ||
-                is.symbol( value );
+    kind.is.primitive = function( value ){
+        return	kind.is.null( value )       ||
+                kind.is.undefined( value )  ||
+                isBooleanType( value )      ||
+                isNumberType( value )       ||
+                isStringType( value )       ||
+                kind.is.symbol( value );
     };
     
     /**
@@ -465,10 +475,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Promise.
      */ 
-    is.promise = function isPromise( value ){
-        return has( 'promise' ) ?
-            value instanceof Promise || is( value, 'Promise' ) :
-            is.thenable( value ) && is.function( value[ 'catch' ] );
+    kind.is.promise = function( value ){
+        return has( 'promise' ) && ( value instanceof Promise || kind.is( value, 'Promise' ) ) || ( kind.is.thenable( value ) && kind.is.function( value.catch ) );
     };
     
     /**
@@ -476,8 +484,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a RegExp.
      */ 
-    is.regExp = function isRegExp( value ){
-        return value instanceof RegExp || is.object( value ) && is[ 'function' ]( value.test ) && is[ 'function' ]( value.exec ) && is.boolean( value.ignoreCase ) || is( value, 'RegExp' );
+    kind.is.regExp = function( value ){
+        return value instanceof RegExp || kind.is.object( value ) && kind.is.function( value.test ) && kind.is.function( value.exec ) && kind.is.boolean( value.ignoreCase ) || kind.is( value, 'RegExp' );
     };
     
     /**
@@ -485,7 +493,7 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Set.
      */ 
-    is.set = function isSet( value ){
+    kind.is.set = function( value ){
         return has( 'set' ) && value instanceof Set || isSetAPI( value );
     };
     
@@ -494,8 +502,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a String.
      */ 
-    is.string = function isString( value ){
-        return isPrimitiveString( value );
+    kind.is.string = function( value ){
+        return isStringType( value );
     };
     
     /**
@@ -503,10 +511,10 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a Symbol.
      */ 
-    is.symbol = function isSymbol( value ){
+    kind.is.symbol = function( value ){
         return has( 'symbol' ) ?
-            typeof value === 'symbol' || is( value, 'Symbol' ) :
-            is[ 'function' ]( value ) && is[ 'function' ]( value[ 'for' ] ) && is[ 'function' ]( value.keyFor );
+            typeof value === 'symbol' || kind.is( value, 'Symbol' ) :
+            kind.is.function( value ) && kind.is.function( value.for ) && kind.is.function( value.keyFor );
     }
     
     /**
@@ -514,8 +522,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is thenable.
      */ 
-    is.thenable = function isThenable( value ){
-        return is.object( value ) && is[ 'function' ]( value.then );	
+    kind.is.thenable = function( value ){
+        return kind.is.object( value ) && kind.is.function( value.then );	
     };
     
     /**
@@ -523,8 +531,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a TypedArray
      */ 
-    is.typedArray = function isTypedArray( value ){
-        return is.arrayLike( value ) && is.number( value.constructor.BYTES_PER_ELEMENT );
+    kind.is.typedArray = function( value ){
+        return kind.is.arrayLike( value ) && kind.is.number( value.constructor.BYTES_PER_ELEMENT );
     };
     
     /**
@@ -532,8 +540,8 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is undefined.
      */ 
-    is.undefined = function isUndefined( value ){
-        return value === UNDEFINED;	
+    kind.is.undefined = function( value ){
+        return value === undefined;	
     };
     
     /**
@@ -541,7 +549,7 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a WeakMap.
      */ 
-    is.weakMap = function isWeakMap( value ){
+    kind.is.weakMap = function( value ){
         return has( 'weakmap' ) && value instanceof WeakMap || isWeakMapAPI( value );
     };
     
@@ -550,9 +558,9 @@
      * @param {*} value
      * @returns {Boolean} Whether or not value is a WeakSet.
      */ 
-    is.weakSet = function isWeakSet( value ){
+    kind.is.weakSet = function( value ){
         return has( 'weakset' ) && value instanceof WeakSet || isWeakSetAPI( value );	
     };
     
-    return is;
-} ) );
+    return kind;
+} );

@@ -116,8 +116,8 @@ module.exports = {
             'NUMBER_FLOAT_NEGATIVE',
             'NUMBER_EXPONENTIAL_POSITIVE',
             'NUMBER_EXPONENTIAL_NEGATIVE',
-            'NUMBER_OCTAL_POSITIVE',
-            'NUMBER_OCTAL_NEGATIVE',
+            //'NUMBER_OCTAL_POSITIVE',
+            //'NUMBER_OCTAL_NEGATIVE',
             'NUMBER_HEX_POSITIVE',
             'NUMBER_HEX_NEGATIVE'
         ],
@@ -131,8 +131,8 @@ module.exports = {
                 'NUMBER_FLOAT_NEGATIVE',
                 'NUMBER_EXPONENTIAL_POSITIVE',
                 'NUMBER_EXPONENTIAL_NEGATIVE',
-                'NUMBER_OCTAL_POSITIVE',
-                'NUMBER_OCTAL_NEGATIVE',
+                //'NUMBER_OCTAL_POSITIVE',
+                //'NUMBER_OCTAL_NEGATIVE',
                 'NUMBER_HEX_POSITIVE',
                 'NUMBER_HEX_NEGATIVE'
             ]
@@ -145,8 +145,8 @@ module.exports = {
                 'NUMBER_NEGATIVE',
                 'NUMBER_EXPONENTIAL_POSITIVE',
                 'NUMBER_EXPONENTIAL_NEGATIVE',
-                'NUMBER_OCTAL_POSITIVE',
-                'NUMBER_OCTAL_NEGATIVE',
+                //'NUMBER_OCTAL_POSITIVE',
+                //'NUMBER_OCTAL_NEGATIVE',
                 'NUMBER_HEX_POSITIVE',
                 'NUMBER_HEX_NEGATIVE'
             ]
@@ -172,8 +172,8 @@ module.exports = {
             'NUMBER_FLOAT_NEGATIVE',
             'NUMBER_EXPONENTIAL_POSITIVE',
             'NUMBER_EXPONENTIAL_NEGATIVE',
-            'NUMBER_OCTAL_POSITIVE',
-            'NUMBER_OCTAL_NEGATIVE',
+            //'NUMBER_OCTAL_POSITIVE',
+            //'NUMBER_OCTAL_NEGATIVE',
             'NUMBER_HEX_POSITIVE',
             'NUMBER_HEX_NEGATIVE',
             'NUMBER_VIA_CONSTRUCTOR'
@@ -251,8 +251,8 @@ module.exports = {
             'NUMBER_FLOAT_NEGATIVE',
             'NUMBER_EXPONENTIAL_POSITIVE',
             'NUMBER_EXPONENTIAL_NEGATIVE',
-            'NUMBER_OCTAL_POSITIVE',
-            'NUMBER_OCTAL_NEGATIVE',
+            //'NUMBER_OCTAL_POSITIVE',
+            //'NUMBER_OCTAL_NEGATIVE',
             'NUMBER_HEX_POSITIVE',
             'NUMBER_HEX_NEGATIVE',
             'STRING_EMPTY',

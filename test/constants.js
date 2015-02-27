@@ -1,5 +1,4 @@
 module.exports = ( function(){
-    
     var Constants = {
         // Typed Arrays
         FLOAT32_ARRAY_EMPTY       : new Float32Array(),
@@ -41,8 +40,8 @@ module.exports = ( function(){
         NUMBER_FLOAT_NEGATIVE : -3.6,
         NUMBER_EXPONENTIAL_POSITIVE : 1.2e3,
         NUMBER_EXPONENTIAL_NEGATIVE : -1.2e3,//-3.2e-5,
-        NUMBER_OCTAL_POSITIVE : 070,
-        NUMBER_OCTAL_NEGATIVE : -010,
+        //NUMBER_OCTAL_POSITIVE : 070,
+        //NUMBER_OCTAL_NEGATIVE : -010,
         NUMBER_HEX_POSITIVE   : 0xAB,
         NUMBER_HEX_NEGATIVE   : -0xCC,
         NUMBER_INFINITY : Infinity,

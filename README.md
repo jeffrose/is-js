@@ -1,4 +1,4 @@
-# is-js
+# kind.js
 
 > A simple checking utility
 

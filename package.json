@@ -1,10 +1,10 @@
 {
-  "name": "is-js",
+  "name": "kind.js",
   "description": ".",
   "version": "0.3.0",
-  "repository": "https://github.com/jeffrose/is-js.git",
-  "homepage": "https://github.com/jeffrose/is-js",
-  "bugs": "https://github.com/jeffrose/is-js/issues",
+  "repository": "https://github.com/jeffrose/kind.js.git",
+  "homepage": "https://github.com/jeffrose/kind.js",
+  "bugs": "https://github.com/jeffrose/kind.js/issues",
   "author": "Jeff Rose",
   "license": "Apache-2.0",
   "keywords": [
