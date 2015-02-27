@@ -16,6 +16,10 @@
 
 `bower install kind.js`
 
+## Learn More
+
+* [API docs](docs/api.md)
+
 ## Typeof operator
 
 > The `typeof` operator returns a string indicating the type of the unevaluated operand.
