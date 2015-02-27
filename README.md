@@ -2,6 +2,20 @@
 
 > A simple checking utility
 
+## Installation
+
+### Git
+
+`git clone https://github.com/jeffrose/kind.js kind.js`
+
+### NPM
+
+`npm install kind.js`
+
+### Bower
+
+`bower install kind.js`
+
 ## Typeof operator
 
 > The `typeof` operator returns a string indicating the type of the unevaluated operand.
@@ -29,7 +43,7 @@ kind.of( {} );              // "Object"
 kind.of( '' );              // "String"
 kind.of( new Date() );      // "Date"
 kind.of( 1 );               // "Number"
-kind.ofis( function(){} );  // "Function"
+kind.of( function(){} );    // "Function"
 kind.of( /test/i );         // "RegExp"
 kind.of( true );            // "Boolean"
 kind.of( null );            // "Null"
