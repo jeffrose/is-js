@@ -8,17 +8,16 @@ const
 
 describe( 'kind', function(){
     
-    beforeEach( function(){
-        
-    } );
-    
     it( 'should be a function', function(){
-        expect( kind ).to.be.an( 'object' );
-        expect( kind.is ).to.be.a( 'function' );
-        expect( kind.of ).to.be.a( 'function' );
+        expect( kind ).to.be.a( 'function' );
+        
+        expect( kind.of( 10 ) ).to.be.a( 'string' );
+        expect( kind.is( 10, 'Number' ) ).to.be.a( 'boolean' );
     } );
     
     it( 'should return a kind', function(){
+        expect( kind.of ).to.be.a( 'function' );
+        
         expect( kind.of( 10     ) ).to.be.a( 'string' );
         expect( kind.of( '10'   ) ).to.be.a( 'string' );
         expect( kind.of( true   ) ).to.be.a( 'string' );
@@ -27,6 +26,8 @@ describe( 'kind', function(){
     } );
     
     it( 'should compare kinds', function(){
+        expect( kind.is ).to.be.a( 'function' );
+        
         expect( kind.is( 10     , 'Number'  ) ).to.be.a( 'boolean' );
         expect( kind.is( '10'   , 'String'  ) ).to.be.a( 'boolean' );
         expect( kind.is( true   , 'Boolean' ) ).to.be.a( 'boolean' );

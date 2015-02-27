@@ -1,19 +1,17 @@
 {
   "name": "kind.js",
   "description": ".",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "repository": "https://github.com/jeffrose/kind.js.git",
   "homepage": "https://github.com/jeffrose/kind.js",
   "bugs": "https://github.com/jeffrose/kind.js/issues",
   "author": "Jeff Rose",
   "license": "Apache-2.0",
   "keywords": [
-    "kind", "kindjs", "kindof", "typeof"
+    "kind", "kindjs", "kindof", "type", "typeof"
   ],
   "main": "kind.js",
-  "dependencies": {
-      
-  },
+  "dependencies": {},
   "devDependencies": {
     "chai": "2.0.0",
     "gulp": "3.8.11",

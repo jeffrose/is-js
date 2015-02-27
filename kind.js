@@ -16,7 +16,6 @@
         'number-issafeinteger'      : 'isSafeInteger'       in Number,
         'number-max_safe_integer'   : 'MAX_SAFE_INTEGER'    in Number,
         'number-min_safe_integer'   : 'MIN_SAFE_INTEGER'    in Number,
-        'object-create'             : 'create'              in Object,
         'promise'                   : 'Promise'             in root,
         'set'                       : 'Set'                 in root,
         'symbol'                    : 'Symbol'              in root,
@@ -72,14 +71,7 @@
             'Number'     : true,
             'String'     : true,
             'undefined'  : true
-        },
-        
-        /**
-         * @namespace
-         */
-        kind = has( 'object-create' ) ?
-            Object.create( null ) :
-            {};
+        };
     
     // Duck typing ES6 Map
     function isMapAPI( value ){
@@ -126,6 +118,19 @@
     /**
      * @function
      * @param {*} value
+     * @param {String} [kind]
+     * @returns {Boolean|String}
+     * 
+     */
+    function kind( value, kind ){
+        return arguments.length > 1 ?
+            kindIs( value, kind ) :
+            kindOf( value );
+    }
+    
+    /**
+     * @function
+     * @param {*} value
      * @param {String} kind
      * @returns {Boolean}
      */
@@ -152,8 +157,8 @@
         return kind;
     }
     
-    kind.of = kindOf;
     kind.is = kindIs;
+    kind.of = kindOf;
     
     /**
      * @function
