@@ -1,6 +1,6 @@
 {
   "name": "kind.js",
-  "description": ".",
+  "description": "A simple checking utility",
   "version": "0.4.0",
   "repository": "https://github.com/jeffrose/kind.js.git",
   "homepage": "https://github.com/jeffrose/kind.js",
